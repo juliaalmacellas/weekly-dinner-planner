@@ -11,14 +11,20 @@ export function generateMealPlan(foods) {
   ];
 
   const plan = [];
+  const usedMeals = [];
 
   let lastCategory = null;
 
   for (let i = 0; i < days.length; i++) {
 
-    const availableFoods = foods.filter(
-      food => food.category !== lastCategory
+    const availableFoods = foods.filter(food =>
+      food.category !== lastCategory &&
+      !usedMeals.includes(food.name)
     );
+
+    if (availableFoods.length === 0) {
+      break;
+    }
 
     const randomIndex = Math.floor(
       Math.random() * availableFoods.length
@@ -30,6 +36,14 @@ export function generateMealPlan(foods) {
       day: days[i],
       meal: selectedFood.name
     });
+
+    usedMeals.push(selectedFood.name);
+
+    lastCategory = selectedFood.category;
+  }
+
+  return plan;
+}
 
     lastCategory = selectedFood.category;
   }
